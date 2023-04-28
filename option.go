@@ -13,7 +13,7 @@ type Option struct {
 	pos                  int
 }
 
-func NewPostionalOption(id string, pos int, required bool) *Option {
+func NewPositionalOption(id string, pos int, required bool) *Option {
 	return &Option{
 		id:         id,
 		required:   required,
