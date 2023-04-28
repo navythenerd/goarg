@@ -12,7 +12,7 @@ parser := goarg.NewParser()
 ### Create Options
 Next we create our desired argument options. There are two types of argument options `Named Options` and `Positional Options`. `Named Options` can be created by using `NewOption(id string, dashIdentifier string, doubleDashIdentifier string, required bool) *Option` 
 ```
-optionFoo := goarg.NewOption("foo", "--foo", "-f", false)
+optionFoo := goarg.NewOption("foo", "f", "foo", false)
 ```
 For `Positional Arguments` use `func NewPositionalOption(id string, pos int, required bool) *Option`. Note that the postion starts with `1`
 ```

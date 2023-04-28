@@ -5,8 +5,8 @@ import "testing"
 func TestArgParserOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewOption("foo", "--foo", "-f", false)
-	optionBar := NewOption("bar", "--bar", "-b", false)
+	optionFoo := NewOption("foo", "f", "foo", false)
+	optionBar := NewOption("bar", "b", "bar", false)
 
 	parser.AddOption(optionFoo, optionBar)
 
@@ -44,8 +44,8 @@ func TestArgParserOption(t *testing.T) {
 func TestArgParserPostionalOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewPostionalOption("foo", 1, true)
-	optionBar := NewPostionalOption("bar", 2, true)
+	optionFoo := NewPositionalOption("foo", 1, true)
+	optionBar := NewPositionalOption("bar", 2, true)
 
 	parser.AddOption(optionFoo, optionBar)
 
@@ -83,8 +83,8 @@ func TestArgParserPostionalOption(t *testing.T) {
 func TestArgParserRequiredPostionalOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewPostionalOption("foo", 1, true)
-	optionBar := NewPostionalOption("bar", 2, true)
+	optionFoo := NewPositionalOption("foo", 1, true)
+	optionBar := NewPositionalOption("bar", 2, true)
 
 	parser.AddOption(optionFoo, optionBar)
 
@@ -100,8 +100,8 @@ func TestArgParserRequiredPostionalOption(t *testing.T) {
 func TestArgParserRequiredOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewOption("foo", "--foo", "-f", false)
-	optionBar := NewOption("bar", "--bar", "-b", true)
+	optionFoo := NewOption("foo", "f", "foo", false)
+	optionBar := NewOption("bar", "b", "bar", true)
 
 	parser.AddOption(optionFoo, optionBar)
 

@@ -25,8 +25,8 @@ func NewPositionalOption(id string, pos int, required bool) *Option {
 func NewOption(id string, dashIdentifier string, doubleDashIdentifier string, required bool) *Option {
 	return &Option{
 		id:                   id,
-		dashIdentifier:       dashIdentifier,
-		doubleDashIdentifier: doubleDashIdentifier,
+		dashIdentifier:       fmt.Sprintf("-%s", dashIdentifier),
+		doubleDashIdentifier: fmt.Sprintf("--%s", doubleDashIdentifier),
 		required:             required,
 		positional:           false,
 	}
