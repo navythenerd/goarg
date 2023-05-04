@@ -5,12 +5,20 @@ import "testing"
 func TestArgParserOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewOption("foo", "f", "foo", false)
-	optionBar := NewOption("bar", "b", "bar", false)
+	var fooMatcher []ArgumentMatcher
+	fooMatcher = append(fooMatcher, NewStringMatcher(PrefixDash, "f", false))
+	fooMatcher = append(fooMatcher, NewStringMatcher(PrefixDoubleDash, "foo", false))
+
+	var barMatcher []ArgumentMatcher
+	barMatcher = append(barMatcher, NewStringMatcher(PrefixDash, "b", false))
+	barMatcher = append(barMatcher, NewStringMatcher(PrefixDoubleDash, "bar", false))
+
+	optionFoo := NewOption("foo", false, fooMatcher...)
+	optionBar := NewOption("bar", false, barMatcher...)
 
 	parser.AddOption(optionFoo, optionBar)
 
-	arg1 := []string{"program", "nonce1", "nonce2", "--foo", "FOO_VALUE", "nonce3", "-b", "BAR_VALUE"}
+	arg1 := []string{"program", "nonce1", "nonce2", "--Foo", "FOO_VALUE", "nonce3", "-B", "BAR_VALUE"}
 	expectedFooValue := "FOO_VALUE"
 	expectedBarValue := "BAR_VALUE"
 
@@ -44,8 +52,11 @@ func TestArgParserOption(t *testing.T) {
 func TestArgParserPostionalOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewPositionalOption("foo", 1, true)
-	optionBar := NewPositionalOption("bar", 2, true)
+	fooMatcher := NewPositionalMatcher(1)
+	barMatcher := NewPositionalMatcher(2)
+
+	optionFoo := NewOption("foo", true, fooMatcher)
+	optionBar := NewOption("bar", true, barMatcher)
 
 	parser.AddOption(optionFoo, optionBar)
 
@@ -83,8 +94,11 @@ func TestArgParserPostionalOption(t *testing.T) {
 func TestArgParserRequiredPostionalOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewPositionalOption("foo", 1, true)
-	optionBar := NewPositionalOption("bar", 2, true)
+	fooMatcher := NewPositionalMatcher(1)
+	barMatcher := NewPositionalMatcher(2)
+
+	optionFoo := NewOption("foo", true, fooMatcher)
+	optionBar := NewOption("bar", true, barMatcher)
 
 	parser.AddOption(optionFoo, optionBar)
 
@@ -100,8 +114,16 @@ func TestArgParserRequiredPostionalOption(t *testing.T) {
 func TestArgParserRequiredOption(t *testing.T) {
 	parser := NewParser()
 
-	optionFoo := NewOption("foo", "f", "foo", false)
-	optionBar := NewOption("bar", "b", "bar", true)
+	var fooMatcher []ArgumentMatcher
+	fooMatcher = append(fooMatcher, NewStringMatcher(PrefixDash, "f", false))
+	fooMatcher = append(fooMatcher, NewStringMatcher(PrefixDoubleDash, "foo", false))
+
+	var barMatcher []ArgumentMatcher
+	barMatcher = append(barMatcher, NewStringMatcher(PrefixDash, "b", false))
+	barMatcher = append(barMatcher, NewStringMatcher(PrefixDoubleDash, "bar", false))
+
+	optionFoo := NewOption("foo", false, fooMatcher...)
+	optionBar := NewOption("bar", true, barMatcher...)
 
 	parser.AddOption(optionFoo, optionBar)
 

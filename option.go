@@ -5,60 +5,34 @@ import (
 )
 
 type Option struct {
-	id                   string
-	doubleDashIdentifier string
-	dashIdentifier       string
-	required             bool
-	positional           bool
-	pos                  int
+	id       string
+	required bool
+	matcher  []ArgumentMatcher
 }
 
-func NewPositionalOption(id string, pos int, required bool) *Option {
+func NewOption(id string, required bool, matcher ...ArgumentMatcher) *Option {
 	return &Option{
-		id:         id,
-		required:   required,
-		positional: true,
-		pos:        pos,
-	}
-}
-
-func NewOption(id string, dashIdentifier string, doubleDashIdentifier string, required bool) *Option {
-	return &Option{
-		id:                   id,
-		dashIdentifier:       fmt.Sprintf("-%s", dashIdentifier),
-		doubleDashIdentifier: fmt.Sprintf("--%s", doubleDashIdentifier),
-		required:             required,
-		positional:           false,
+		id:       id,
+		required: required,
+		matcher:  matcher,
 	}
 }
 
 func (opt *Option) parse(args []string) (string, error) {
-	// check for postional argument
-	if opt.positional {
+	// check arguments against matcher
+	for _, m := range opt.matcher {
+		val, ok := m.Match(args)
 
-		if (len(args)-1) < opt.pos && opt.required {
-			return "", fmt.Errorf("argument %s is required, but was not found", opt.id)
-		}
-
-		return args[opt.pos], nil
-	}
-
-	// check for dash and double dash identifier values
-	for i := 1; i < len(args); i++ {
-		if args[i] == opt.dashIdentifier || args[i] == opt.doubleDashIdentifier {
-			if len(args) < i+2 {
-				return "", fmt.Errorf("identifier for argument %s found, but no value given", opt.id)
-			}
-
-			return args[i+1], nil
+		if ok {
+			return val, nil
 		}
 	}
 
-	// argument required but not found
+	// option is required but did not match against any matcher
 	if opt.required {
-		return "", fmt.Errorf("argument %s is required, but was not found", opt.id)
+		return "", fmt.Errorf("option %s not found but required", opt.id)
 	}
 
-	// argument is optional
+	// did not match, but is not required either
 	return "", nil
 }

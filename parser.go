@@ -1,21 +1,21 @@
 package goarg
 
-type ArgParser struct {
+type ArgumentParser struct {
 	options []*Option
 	values  map[string]string
 }
 
-func NewParser() *ArgParser {
-	return &ArgParser{
+func NewParser() *ArgumentParser {
+	return &ArgumentParser{
 		values: make(map[string]string),
 	}
 }
 
-func (parser *ArgParser) AddOption(option ...*Option) {
+func (parser *ArgumentParser) AddOption(option ...*Option) {
 	parser.options = option
 }
 
-func (parser *ArgParser) Parse(args []string) error {
+func (parser *ArgumentParser) Parse(args []string) error {
 	for _, opt := range parser.options {
 		val, err := opt.parse(args)
 
@@ -29,7 +29,7 @@ func (parser *ArgParser) Parse(args []string) error {
 	return nil
 }
 
-func (parser *ArgParser) Value(id string) (string, bool) {
+func (parser *ArgumentParser) Value(id string) (string, bool) {
 	val, ok := parser.values[id]
 	return val, ok
 }
