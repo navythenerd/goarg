@@ -1,42 +1,88 @@
 # GoArg
 GoArg is a commandline argument parser for go.
 
-## Usage
+## API
+Overview over the GoArg API.
 
-### Create Argument Parser
-First create a new argument parser instance
+### Argument Parser
+A new argument parser instance can be created with
+```
+func NewParser() *ArgumentParser
+```
+
+### Argument Matcher
+An argument matcher is used to match against a slice of string. An arggument matcher implements the `ArgumentMatcher` interface:
+```
+Match(args []string) (string, bool)
+```
+
+#### String matcher
+Used for matching against named arguments like `--foo`. The following prefixes are supported:
+- `PrefixDash`: -
+- `PrefixDoubleDash`: --
+- `PrefixSlash`: /
+
+
+`StringMatcher` are created by:
+```
+func NewStringMatcher(p Prefix, keyword string, caseSensitive bool) *StringMatcher
+``` 
+
+#### Postional matcher
+Used for matching against postional argument at a specific position. The first arguments position is given by `1`.
+
+`PostionalMatcher` are created by:
+```
+func NewPositionalMatcher(pos uint) *PostionalMatcher 
+```
+
+### Options
+An `Option` is a aggregator for different matchers which is represented by an identifier and a required field. The `id` is used to retriev parsed values from the argument parser.
+```
+func NewOption(id string, required bool, matcher ...ArgumentMatcher) *Option
+```
+Options can be added to the argument parser by calling the follwoing function on an `ArgumentParser`
+```
+func (parser *ArgumentParser) AddOption(option ...*Option)
+```
+
+### Parsing and retrieving values
+Parse arguments with given options by calling the following on an `ArgumentParser`, an error is returned if a required argument is not present:
+```
+func (parser *ArgumentParser) Parse(args []string) error
+```
+
+Retrieve parsed values by the option's `id` with:
+```
+func (parser *ArgumentParser) Value(id string) (string, bool) 
+```
+
+
+## Example
 ```
 parser := goarg.NewParser()
-```
 
-### Create Options
-Next we create our desired argument options. There are two types of argument options `Named Options` and `Positional Options`. `Named Options` can be created by using `NewOption(id string, dashIdentifier string, doubleDashIdentifier string, required bool) *Option` 
-```
-optionFoo := goarg.NewOption("foo", "f", "foo", false)
-```
-For `Positional Arguments` use `func NewPositionalOption(id string, pos int, required bool) *Option`. Note that the postion starts with `1`
-```
-optionBar := goarg.NewPostionalOption("bar", 1, true)
-```
+var fooMatcher []goarg.ArgumentMatcher
+fooMatcher = append(fooMatcher, goarg.NewStringMatcher(PrefixDash, "f", false))
+fooMatcher = append(fooMatcher, goarg.NewStringMatcher(PrefixDoubleDash, "foo", false))
 
-### Add Options
-Next we add our options to the parser instance
-```
-parser.AddOptions(optionFoo, optionBar)
-```
+var barMatcher []goarg.ArgumentMatcher
+barMatcher = append(barMatcher, goarg.NewStringMatcher(PrefixDash, "b", false))
+barMatcher = append(barMatcher, goarg.NewStringMatcher(PrefixDoubleDash, "bar", false))
 
-### Parse arguments
-```
-args := os.Args
-err := parser.Parse(args)
+postionalMatcher := goarg.NewPositionalMatcher(1)
 
-if err != nil {
-    ...
-}
+optionPostional := goarg.NewOption("pos", true, postionalMatcher)
+optionFoo := goarg.NewOption("foo", false, fooMatcher...)
+optionBar := goarg.NewOption("bar", false, barMatcher...)
+
+parser.addOption(optionPostional, optionFoo, optionBar)
 ```
 
 ### Read parsed values
-Read the parsed values by using the argument `id`
+Read the parsed values by using the option `id`
 ```
 fooValue, ok := parser.Value("foo")
+fooValue, ok := parser.Value("bar")
+postionalValue, ok := parser.Value("pos")
 ```
