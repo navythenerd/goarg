@@ -28,12 +28,12 @@ Used for matching against named arguments like `--foo`. The following prefixes a
 func NewStringMatcher(p Prefix, keyword string, caseSensitive bool) *StringMatcher
 ``` 
 
-#### Postional matcher
-Used for matching against postional argument at a specific position. The first arguments position is given by `1`.
+#### Positional matcher
+Used for matching against positional argument at a specific position. The first arguments position is given by `1`.
 
-`PostionalMatcher` are created by:
+`PositionalMatcher` are created by:
 ```
-func NewPositionalMatcher(pos uint) *PostionalMatcher 
+func NewPositionalMatcher(pos uint) *PositionalMatcher 
 ```
 
 ### Options
@@ -70,13 +70,13 @@ var barMatcher []goarg.ArgumentMatcher
 barMatcher = append(barMatcher, goarg.NewStringMatcher(PrefixDash, "b", false))
 barMatcher = append(barMatcher, goarg.NewStringMatcher(PrefixDoubleDash, "bar", false))
 
-postionalMatcher := goarg.NewPositionalMatcher(1)
+positionalMatcher := goarg.NewPositionalMatcher(1)
 
-optionPostional := goarg.NewOption("pos", true, postionalMatcher)
+optionPositional := goarg.NewOption("pos", true, positionalMatcher)
 optionFoo := goarg.NewOption("foo", false, fooMatcher...)
 optionBar := goarg.NewOption("bar", false, barMatcher...)
 
-parser.addOption(optionPostional, optionFoo, optionBar)
+parser.addOption(optionPositional, optionFoo, optionBar)
 ```
 
 ### Read parsed values
@@ -84,5 +84,5 @@ Read the parsed values by using the option `id`
 ```
 fooValue, ok := parser.Value("foo")
 fooValue, ok := parser.Value("bar")
-postionalValue, ok := parser.Value("pos")
+positionalValue, ok := parser.Value("pos")
 ```

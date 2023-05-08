@@ -49,7 +49,7 @@ func TestArgParserOption(t *testing.T) {
 	}
 }
 
-func TestArgParserPostionalOption(t *testing.T) {
+func TestArgParserPositionalOption(t *testing.T) {
 	parser := NewParser()
 
 	fooMatcher := NewPositionalMatcher(1)
@@ -91,7 +91,7 @@ func TestArgParserPostionalOption(t *testing.T) {
 	}
 }
 
-func TestArgParserRequiredPostionalOption(t *testing.T) {
+func TestArgParserRequiredPositionalOption(t *testing.T) {
 	parser := NewParser()
 
 	fooMatcher := NewPositionalMatcher(1)
