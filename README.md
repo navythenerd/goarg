@@ -77,6 +77,8 @@ optionFoo := goarg.NewOption("foo", false, fooMatcher...)
 optionBar := goarg.NewOption("bar", false, barMatcher...)
 
 parser.addOption(optionPositional, optionFoo, optionBar)
+
+parser.Parse(os.Args())
 ```
 
 ### Read parsed values
